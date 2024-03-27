@@ -1,6 +1,6 @@
 package message
 
-import "github.com/nem0z/gecho/message/messages"
+import "github.com/nem0z/gecho/message/payloads"
 
 type Payload interface {
 	ToByte() ([]byte, error)

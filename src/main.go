@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/nem0z/gecho/message"
+	"github.com/nem0z/gecho/message/payloads"
 	"github.com/nem0z/gecho/peer"
 	"github.com/nem0z/gecho/server"
 )
