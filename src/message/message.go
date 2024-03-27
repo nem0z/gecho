@@ -10,7 +10,7 @@ const HeaderLength = 24
 
 type Message struct {
 	header  *Header
-	payload Payload
+	payload *Payload
 }
 
 func Format(command string, data []byte) *Message {
@@ -35,7 +35,7 @@ func (msg *Message) IsValid() bool {
 		return false
 	}
 
-	payload, err := msg.payload.ToByte()
+	payload, err := (*msg.payload).ToByte()
 	if err != nil {
 		return false
 	}
@@ -53,7 +53,7 @@ func (msg *Message) Marshall() ([]byte, error) {
 		return nil, err
 	}
 
-	payload, err := msg.payload.ToByte()
+	payload, err := (*msg.payload).ToByte()
 	if err != nil {
 		return nil, err
 	}
