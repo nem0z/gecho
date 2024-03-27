@@ -11,7 +11,11 @@ func ParsePayload(command string, data []byte) *Payload {
 
 	switch command {
 	case "echo":
-		payload = messages.NewEcho(data)
+		payload = payloads.ParseEcho(data)
+	case "ping":
+		payload = payloads.ParsePing(data)
+	case "pong":
+		payload = payloads.ParsePong(data)
 	}
 
 	return &payload
