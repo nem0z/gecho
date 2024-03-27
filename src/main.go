@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"github.com/nem0z/gecho/message"
+	"github.com/nem0z/gecho/message/payloads"
 	"github.com/nem0z/gecho/peer"
+	"github.com/nem0z/gecho/peer/handlers"
 	"github.com/nem0z/gecho/server"
 )
 
@@ -23,13 +25,19 @@ func main() {
 	log.Println("Server started :", serv)
 
 	p, err := peer.New("localhost:8080")
+	p.Register("echo", handlers.Echo(p))
+	p.Register("ping", handlers.Ping(p))
+	p.Register("pong", handlers.Pong(p))
 	handle(err)
 
 	time.Sleep(time.Second)
 
-	echo := message.Format("echo", []byte("Hello, world!"))
-	fmt.Println("Message :", echo)
-	err = p.Send(echo)
+	echo := payloads.NewEcho([]byte("Hello, World!"))
+	msg, err := message.Format("echo", echo)
+	handle(err)
+
+	fmt.Println("Message :", msg)
+	err = p.Send(msg)
 	handle(err)
 
 	select {}

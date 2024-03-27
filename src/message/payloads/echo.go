@@ -1,4 +1,4 @@
-package messages
+package payloads
 
 type Echo struct {
 	data []byte
@@ -6,6 +6,10 @@ type Echo struct {
 
 func NewEcho(data []byte) *Echo {
 	return &Echo{data: data}
+}
+
+func ParseEcho(data []byte) *Echo {
+	return NewEcho(data)
 }
 
 func (echo *Echo) ToByte() ([]byte, error) {

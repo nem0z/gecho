@@ -10,6 +10,7 @@ func (peer Peer) Handle() {
 		msg, err := ReadMessage(peer)
 		if err != nil {
 			log.Println("Error handling new message :", err)
+			continue
 		}
 
 		log.Printf("Handled new message on peer %v : %v\n", peer.RemoteAddr(), msg)

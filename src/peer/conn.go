@@ -19,6 +19,13 @@ func readHeader(peer Peer) (*message.Header, error) {
 	return message.ParseHeader(header)
 }
 
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 func ReadMessage(peer Peer) (*message.Message, error) {
 	header, err := readHeader(peer)
 	if err != nil {
@@ -26,7 +33,7 @@ func ReadMessage(peer Peer) (*message.Message, error) {
 	}
 
 	payload := []byte{}
-	buf := make([]byte, bufferSize)
+	buf := make([]byte, min(bufferSize, header.Len()))
 
 	for {
 		n, err := peer.Read(buf)
@@ -41,9 +48,9 @@ func ReadMessage(peer Peer) (*message.Message, error) {
 		}
 	}
 
-	if uint64(len(payload)) != header.Len() {
+	if len(payload) != header.Len() {
 		return nil, fmt.Errorf("expected %v, read %v", header.Len(), len(payload))
 	}
 
-	return message.New(header, payload), nil
+	return message.New(header, message.ParsePayload(header.GetCommand(), payload)), nil
 }

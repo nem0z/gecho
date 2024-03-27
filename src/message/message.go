@@ -1,28 +1,39 @@
 package message
 
-import "bytes"
+import (
+	"bytes"
+
+	"github.com/nem0z/gecho/utils"
+)
 
 const HeaderLength = 24
 
 type Message struct {
 	header  *Header
-	payload Payload
+	payload *Payload
 }
 
-func Format(command string, data []byte) *Message {
-	header := &Header{
-		command:  command,
-		length:   uint64(len(data)),
-		checksum: Checksum(data),
+func Format(command string, payload Payload) (*Message, error) {
+	payloadData, err := (payload).ToByte()
+	if err != nil {
+		return nil, err
 	}
 
-	payload := NewPayload(command, data)
-	return &Message{header, *payload}
+	header := &Header{
+		command:  command,
+		length:   len(payloadData),
+		checksum: utils.Checksum(payloadData),
+	}
+
+	return &Message{header, &payload}, nil
 }
 
-func New(header *Header, data []byte) *Message {
-	payload := NewPayload(header.command, data)
-	return &Message{header, *payload}
+func New(header *Header, payload *Payload) *Message {
+	return &Message{header, payload}
+}
+
+func (msg *Message) GetPayload() *Payload {
+	return msg.payload
 }
 
 func (msg *Message) GetCommand() string {
@@ -35,16 +46,16 @@ func (msg *Message) IsValid() bool {
 		return false
 	}
 
-	payload, err := msg.payload.ToByte()
+	payload, err := (*msg.payload).ToByte()
 	if err != nil {
 		return false
 	}
 
-	if msg.header.length != uint64(len(payload)) {
+	if msg.header.length != len(payload) {
 		return false
 	}
 
-	return bytes.Equal(Checksum(payload), msg.header.checksum)
+	return bytes.Equal(utils.Checksum(payload), msg.header.checksum)
 }
 
 func (msg *Message) Marshall() ([]byte, error) {
@@ -53,7 +64,7 @@ func (msg *Message) Marshall() ([]byte, error) {
 		return nil, err
 	}
 
-	payload, err := msg.payload.ToByte()
+	payload, err := (*msg.payload).ToByte()
 	if err != nil {
 		return nil, err
 	}
