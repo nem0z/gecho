@@ -6,7 +6,7 @@ type Payload interface {
 	ToByte() ([]byte, error)
 }
 
-func NewPayload(command string, data []byte) *Payload {
+func ParsePayload(command string, data []byte) *Payload {
 	var payload Payload
 
 	switch command {

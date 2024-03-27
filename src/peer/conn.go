@@ -45,5 +45,5 @@ func ReadMessage(peer Peer) (*message.Message, error) {
 		return nil, fmt.Errorf("expected %v, read %v", header.Len(), len(payload))
 	}
 
-	return message.New(header, payload), nil
+	return message.New(header, message.ParsePayload(header.GetCommand(), payload)), nil
 }
