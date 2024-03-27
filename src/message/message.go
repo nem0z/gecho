@@ -13,16 +13,27 @@ type Message struct {
 	payload *Payload
 }
 
-func Format(command string, data []byte) *Message {
+func Format(command string, payload Payload) (*Message, error) {
+	payloadData, err := (payload).ToByte()
+	if err != nil {
+		return nil, err
+	}
+
 	header := &Header{
 		command:  command,
 		length:   len(payloadData),
 		checksum: utils.Checksum(payloadData),
+	}
+
+	return &Message{header, &payload}, nil
 }
 
-func New(header *Header, data []byte) *Message {
-	payload := NewPayload(header.command, data)
-	return &Message{header, *payload}
+func New(header *Header, payload *Payload) *Message {
+	return &Message{header, payload}
+}
+
+func (msg *Message) GetPayload() *Payload {
+	return msg.payload
 }
 
 func (msg *Message) GetCommand() string {
