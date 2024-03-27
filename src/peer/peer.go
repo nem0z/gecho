@@ -4,13 +4,17 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"time"
 
 	"github.com/nem0z/gecho/message"
 )
 
 type Peer struct {
 	net.Conn
-	handlers map[string]Handler
+	handlers  map[string]Handler
+	LastNonce []byte
+	LastPing  time.Time
+	LastPong  time.Time
 }
 
 func New(addr string) (*Peer, error) {
