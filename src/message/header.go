@@ -8,11 +8,11 @@ import (
 
 type Header struct {
 	command  string
-	length   uint64
+	length   int
 	checksum []byte
 }
 
-func (h *Header) Len() uint64 {
+func (h *Header) Len() int {
 	return h.length
 }
 
@@ -27,7 +27,7 @@ func (h *Header) Marshall() ([]byte, error) {
 	}
 
 	length := make([]byte, 8)
-	binary.BigEndian.PutUint64(length, h.length)
+	binary.BigEndian.PutUint64(length, uint64(h.length))
 
 	return bytes.Join([][]byte{command, length, h.checksum[:]}, nil), nil
 }
@@ -46,7 +46,7 @@ func ParseHeader(data []byte) (*Header, error) {
 
 	return &Header{
 		command:  command,
-		length:   length,
+		length:   int(length),
 		checksum: data[20:24],
 	}, nil
 }

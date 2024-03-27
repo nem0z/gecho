@@ -16,12 +16,8 @@ type Message struct {
 func Format(command string, data []byte) *Message {
 	header := &Header{
 		command:  command,
-		length:   uint64(len(data)),
-		checksum: Checksum(data),
-	}
-
-	payload := NewPayload(command, data)
-	return &Message{header, *payload}
+		length:   len(payloadData),
+		checksum: utils.Checksum(payloadData),
 }
 
 func New(header *Header, data []byte) *Message {
@@ -44,7 +40,7 @@ func (msg *Message) IsValid() bool {
 		return false
 	}
 
-	if msg.header.length != uint64(len(payload)) {
+	if msg.header.length != len(payload) {
 		return false
 	}
 

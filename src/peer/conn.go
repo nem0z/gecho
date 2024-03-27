@@ -41,7 +41,7 @@ func ReadMessage(peer Peer) (*message.Message, error) {
 		}
 	}
 
-	if uint64(len(payload)) != header.Len() {
+	if len(payload) != header.Len() {
 		return nil, fmt.Errorf("expected %v, read %v", header.Len(), len(payload))
 	}
 
