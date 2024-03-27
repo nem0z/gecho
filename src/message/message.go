@@ -1,6 +1,10 @@
 package message
 
-import "bytes"
+import (
+	"bytes"
+
+	"github.com/nem0z/gecho/utils"
+)
 
 const HeaderLength = 24
 
@@ -44,7 +48,7 @@ func (msg *Message) IsValid() bool {
 		return false
 	}
 
-	return bytes.Equal(Checksum(payload), msg.header.checksum)
+	return bytes.Equal(utils.Checksum(payload), msg.header.checksum)
 }
 
 func (msg *Message) Marshall() ([]byte, error) {
