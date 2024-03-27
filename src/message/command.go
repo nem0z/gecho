@@ -5,7 +5,9 @@ import "fmt"
 const CommandLength = 12
 
 var commandList = map[string]uint8{
-	"hello": 0,
+	"echo": 0,
+	"ping": 1,
+	"pong": 2,
 }
 
 func GetCommandKey(command string) (uint8, error) {
