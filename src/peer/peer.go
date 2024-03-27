@@ -23,15 +23,16 @@ func New(addr string) (*Peer, error) {
 		return nil, err
 	}
 
-	p := &Peer{conn, map[string]Handler{}}
+	p := &Peer{Conn: conn, handlers: map[string]Handler{}}
 	go p.Handle()
 
-	return p, nil
+	return p, p.Ping()
 }
 
 func NewFromConn(conn net.Conn) *Peer {
-	p := &Peer{conn, map[string]Handler{}}
+	p := &Peer{Conn: conn, handlers: map[string]Handler{}}
 	go p.Handle()
+	p.Ping()
 	return p
 }
 
