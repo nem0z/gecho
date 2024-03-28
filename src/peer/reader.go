@@ -9,6 +9,26 @@ import (
 
 const bufferSize = 1024
 
+func (p *Peer) ReadAll() ([]byte, error) {
+	msg := []byte{}
+	buf := make([]byte, bufferSize)
+
+	for {
+		n, err := p.Read(buf)
+
+		if err != nil && err != io.EOF {
+			return nil, err
+		}
+
+		msg = append(msg, buf[:n]...)
+		if n < bufferSize || err != nil {
+			break
+		}
+	}
+
+	return msg, nil
+}
+
 func readHeader(peer Peer) (*message.Header, error) {
 	header := make([]byte, message.HeaderLength)
 	_, err := peer.Read(header)
