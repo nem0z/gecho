@@ -16,6 +16,10 @@ func ParsePayload(command string, data []byte) *Payload {
 		payload = payloads.ParsePing(data)
 	case "pong":
 		payload = payloads.ParsePong(data)
+	case "version":
+		payload = payloads.ParseVersion(data)
+	case "verack":
+		payload = payloads.ParseVerack(data)
 	}
 
 	return &payload
